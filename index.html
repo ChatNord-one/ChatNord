@@ -101,60 +101,76 @@ document.getElementById("scrollDown").addEventListener("click", () => {
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<title>Чат-панель</title>
+<title>Локальний чат</title>
 <style>
   body {
     margin: 0;
-    padding: 0;
-    height: 2000px; /* просто щоб була прокрутка */
     font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
   }
   .chat-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #f1f1f1;
     display: flex;
     padding: 10px;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    background: #111;
   }
   .chat-panel input {
     flex: 1;
     padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
+    border: none;
+    background: #222;
+    color: white;
     border-radius: 6px;
     outline: none;
   }
   .chat-panel button {
     margin-left: 10px;
-    padding: 10px 15px;
-    font-size: 16px;
-    border: none;
+    padding: 10px;
     background: #007BFF;
-    color: white;
+    border: none;
     border-radius: 6px;
+    color: white;
     cursor: pointer;
-  }
-  .chat-panel button:hover {
-    background: #0056b3;
   }
 </style>
 </head>
 <body>
 
+<div class="messages" id="messages"></div>
+
 <div class="chat-panel">
-  <input type="text" id="chatInput" placeholder="Введіть повідомлення...">
+  <input type="text" id="chatInput" placeholder="Напишіть повідомлення...">
   <button id="sendBtn">Відправити</button>
 </div>
 
 <script>
-document.getElementById("sendBtn").addEventListener("click", function() {
-  let text = document.getElementById("chatInput").value.trim();
-  if (text !== "") {
-    alert("Ви відправили: " + text);
-    document.getElementById("chatInput").value = "";
+const input = document.getElementById("chatInput");
+const sendBtn = document.getElementById("sendBtn");
+const messages = document.getElementById("messages");
+
+function sendMessage() {
+  const text = input.value.trim();
+  if (text) {
+    const msg = document.createElement("div");
+    msg.textContent = "Ви: " + text;
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+    input.value = "";
+  }
+}
+
+sendBtn.addEventListener("click", sendMessage);
+input.addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    sendMessage();
   }
 });
 </script>
