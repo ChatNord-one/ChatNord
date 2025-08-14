@@ -96,12 +96,11 @@ document.getElementById("scrollDown").addEventListener("click", () => {
 </body>
 </html>
 
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<title>Локальний чат</title>
+<title>Мій Онлайн-Чат</title>
 <style>
   body {
     margin: 0;
@@ -151,29 +150,65 @@ document.getElementById("scrollDown").addEventListener("click", () => {
   <button id="sendBtn">Відправити</button>
 </div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 <script>
-const input = document.getElementById("chatInput");
-const sendBtn = document.getElementById("sendBtn");
-const messages = document.getElementById("messages");
+  // 1. ВСТАВ СВОЇ КЛЮЧІ З FIREBASE:
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
 
-function sendMessage() {
-  const text = input.value.trim();
-  if (text) {
-    const msg = document.createElement("div");
-    msg.textContent = "Ви: " + text;
-    messages.appendChild(msg);
-    messages.scrollTop = messages.scrollHeight;
-    input.value = "";
+  // 2. Ініціалізація Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const messagesDiv = document.getElementById("messages");
+  const input = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendBtn");
+
+  // 3. Відправка повідомлення
+  function sendMessage() {
+    const text = input.value.trim();
+    if (text) {
+      db.ref("messages").push({
+        text: text,
+        time: Date.now()
+      });
+      input.value = "";
+    }
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  input.addEventListener("keypress", e => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  // 4. Отримання повідомлень у реальному часі
+  db.ref("messages").on("child_added", snapshot => {
+    const msg = snapshot.val();
+    const div = document.createElement("div");
+    div.textContent = msg.text;
+    messagesDiv.appendChild(div);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+</script>
+
+</body>
+</html>
+
+{
+  "rules": {
+    ".read": true,
+    ".write": true
   }
 }
-
-sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keypress", function(e) {
-  if (e.key === "Enter") {
-    sendMessage();
-  }
-});
-</script>
 
 </body>
 </html>
