@@ -8,3 +8,48 @@
   </a>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Кнопка Вгору</title>
+  <style>
+    body {
+      height: 3000px; /* щоб була прокрутка */
+      background: linear-gradient(white, lightblue);
+    }
+    #toTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: 0.3s;
+    }
+    #toTop:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<button id="toTop">⬆ Вгору</button>
+
+<script>
+document.getElementById("toTop").addEventListener("click", function() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth" // плавна прокрутка
+  });
+});
+</script>
+
+</body>
+</html>
